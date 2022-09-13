@@ -8,10 +8,17 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
+
 """
+
+import os
+
+
 
 
 from pathlib import Path
+from pickle import FALSE, TRUE
+from xmlrpc.client import INTERNAL_ERROR
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,13 +32,17 @@ SECRET_KEY = 'django-insecure-!4jgyr!ox!0yvt(ti(uhem7_41a^#71@dt@ey2i)w3jipi=bmy
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 ALLOWED_HOSTS = []
+
+MESSAGE_STORAGE ="django.contrib.messages.storage.cookie.CookieStorage"
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'django.contrib.sites',
+    'registration', #should be immediately above 'django.contrib.admin'
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,8 +50,23 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    'store.apps.StoreConfig',
+    'allauth',
+ 
+    'allauth.socialaccount',
+   
+    'store',
+    
+    'crispy_forms',
+    
+    #"crispy_bootstrap5",
 ]
+
+#CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+#CRISPY_TEMPLATE_PACK = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap4"
+
+X_FRAME_OPTIONS='SAMEORIGIN'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -57,7 +83,7 @@ ROOT_URLCONF = 'ecommerce.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS':[os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -112,13 +138,15 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False #por pytest lo dejamos en false
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
-import os
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
 STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
@@ -130,3 +158,30 @@ MEDIA_ROOT = os.path.join(BASE_DIR,"media")
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+LOGOUT_REDIRECT_URL = "/tienda"
+LOGIN_REDIRECT_URL = "/tienda"
+LOGIN_URL = 'django.contrib.auth.views.login'
+ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, use a different value.
+REGISTRATION_AUTO_LOGIN = True # Automatically log the user in.
+SITE_ID = 1
+
+#debug_toolbar 
+if DEBUG:
+    MIDDLEWARE += [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+    ]
+    INSTALLED_APPS +=[
+        "debug_toolbar",
+    ]
+    INTERNAL_IPS =[
+        "127.0.0.1",
+    ]
+    import mimetypes
+    
+    mimetypes.add_type("application/javascript",".js",True)
+    
+    DEBUG_TOOLBAR_CONFIG ={
+        "INTERCEPT_REDIRECTS":False ,
+    }
