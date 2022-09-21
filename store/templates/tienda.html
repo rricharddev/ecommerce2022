@@ -6,13 +6,12 @@
 
 
 <div class="container">
-  <!-- Content here -->
- 
+
   <div class="row">
     {% for p in productos %}
-    <div class="col-md-3 col-sm-12 col-lg-4">
-      <div class="card" style="width: 100%;">
-        <img class="featured-img" src="{{ p.imagen.url }}" class="card-img-fluid" alt="...">
+    <div class="col-md-3 col-sm-12 col-lg-4 py-3">
+      <div class="card" >
+        <img class="img-responsive"  width = "100%" style="padding-top: 5px " src="{{ p.imagen.url }}" class="card-img-top" alt="...">
         <div class="card-body">
           <h5 class="card-title">{{ p.marca }}</h5>
           <h5 class="card-title">${{p.precio}}</h5>
