@@ -1,6 +1,8 @@
-
-
 $primary:#20c997;
+
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+
 
 *{
   margin: 0;
@@ -61,5 +63,5 @@ $primary:#20c997;
 
 
 
-@import "../node_modules/bootstrap/scss/bootstrap";
+
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
